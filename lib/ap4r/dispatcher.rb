@@ -4,8 +4,6 @@
 
 require 'yaml'
 require 'thread'
-require 'pp'
-require 'active_support'
 
 require 'uri'
 require 'net/http'
@@ -345,4 +343,30 @@ module Ap4r
     end
 
   end
+
+  module DispatchHelper
+
+    # The dispatch logic of Ap4r is misappropriated.
+    #
+    # === Args
+    #
+    # +logger+ :: the logger.
+    # +msg+    :: received message from reliable-msg queue.
+    # +conf+   :: ap4r configuration.
+    #
+    def dispatch logger, msg, conf
+      dispatcher = Ap4r::Dispatcher.new nil, [], logger
+      
+      logger.debug { "dispatcher get message\n#{msg.to_yaml}" }
+      response = dispatcher.send(:get_dispather_instance,
+                                 msg.headers[:dispatch_mode],
+                                 msg,
+                                 conf).call
+      logger.debug { "dispatcher get response\n#{response.to_yaml}" }
+    end
+    module_function :dispatch
+
+  end
+
 end
+

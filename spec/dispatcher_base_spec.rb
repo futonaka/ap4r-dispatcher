@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), "../spec_helper")
+require File.join(File.dirname(__FILE__), "/spec_helper")
 
 require "reliable-msg"
 require "ap4r/dispatcher"
